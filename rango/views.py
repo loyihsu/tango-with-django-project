@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
@@ -36,6 +38,9 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 def add_category(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('rango:login'))
+    
     form = CategoryForm()
 
     # A HTTP POST?
@@ -55,6 +60,8 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 def add_page(request, category_name_slug):
+    if not request.user.is_authenticated:
+        return redirect(reverse('rango:login'))
     try:
         category = Category.objects.get(slug=category_name_slug)
     except Category.DoesNotExist:
@@ -110,3 +117,32 @@ def register(request):
         profile_form = UserProfileForm()
 
     return render(request, 'rango/register.html', context={'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('rango:index'))
+            else:
+                return HttpResponse("Your Rango account is disabled.")
+        else:
+                print(f"Invalid login details: {username}, {password}")
+                return HttpResponse("Invalid login details supplied.")
+    else:
+        return render(request, 'rango/login.html')
+
+def restricted(request):
+    if not request.user.is_authenticated:
+        return redirect(reverse('rango:login'))
+    return render(request, 'rango/restricted.html')
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('rango:index'))
