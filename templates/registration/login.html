@@ -4,9 +4,16 @@
     Login
 {% endblock %}
 
-{% block body_block %}
-<h1>Login</h1>
+{% block additional_headers %}
+<link href="https://getbootstrap.com/docs/4.2/examples/sign-in/signin.css" rel="stylesheet">
+{% endblock %}
 
+{% block body_block %}
+<div class="jumbotron p-4">
+    <div class="container">
+        <h1 class="jumbotron-heading">Login</h1>
+    </div>
+</div>
 <div class="container">
     <form class="form-signin" role="form" method="post" action=".">
         {% csrf_token %}
