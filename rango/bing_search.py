@@ -31,9 +31,10 @@ def run_query(search_terms):
     See the Microsoft's documentation on other parameters that you can set. http://bit.ly/twd-bing-api
     """
     bing_key = read_bing_key()
-    search_url = 'https://api.cognitive.microsoft.com/bing/v7.0/search'
+
+    search_url = 'https://api.bing.microsoft.com/v7.0/search'
     headers = {'Ocp-Apim-Subscription-Key': bing_key}
-    params  = {'q': search_terms, 'textDecorations': True, 'textFormat':' HTML'}
+    params  = {'q': search_terms , 'textDecorations': True, 'textFormat':'HTML'}
 
     # Issue the request, given the details above.
     response = requests.get(search_url, headers=headers, params=params)
@@ -50,7 +51,7 @@ def run_query(search_terms):
     return results
 
 def main():
-    terms = 'mac'
+    terms = input()
     run_query(terms)
 
 if __name__ == '__main__':
