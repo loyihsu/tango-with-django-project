@@ -5,6 +5,7 @@ from datetime import datetime
 
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm
+from rango.bing_search import run_query
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -24,6 +25,17 @@ def about(request):
     context_dict = {'visits': request.session['visits']}
     return render(request, 'rango/about.html', context_dict)
     # return HttpResponse("<a href=\"/rango/\">Index</a>Rango says here is the about page.")
+
+def search(request):
+    result_list = []
+
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+        
+    return render(request, 'rango/search.html', {'result_list': result_list})
 
 def show_category(request, category_name_slug):
     context_dict = {}
