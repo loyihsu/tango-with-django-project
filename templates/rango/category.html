@@ -16,7 +16,7 @@
         <ul>
             {% for page in pages %}
             <li>
-                <a href="{{ page.url }}">{{ page.title }}</a>
+                <a href="{% url 'rango:goto' %}?page_id={{ page.id }}">{{ page.title }} / {{ page.views }}</a>
             </li>
             {% endfor %}
         </ul>

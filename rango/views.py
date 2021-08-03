@@ -127,3 +127,16 @@ def visitor_cookie_handler(request):
         request.session['last_visit'] = last_visit_cookie
 
     request.session['visits'] = visits
+
+def goto_url(request):
+    page_id = None
+    if request.method == 'GET':
+        page_id = request.GET.get('page_id', '')
+    
+    if page_id == None:
+        return redirect('/rango/')
+
+    page = Page.objects.get(id=page_id)
+    page.views += 1
+    page.save()
+    return redirect(page.url)
