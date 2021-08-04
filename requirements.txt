@@ -2,4 +2,4 @@ Django==2.1.5
 Pillow==5.4.1
 pytz==2018.9
 requests
-django-registration-redux==2.9
+django-registration-redux==2.2
