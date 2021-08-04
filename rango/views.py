@@ -49,6 +49,10 @@ def show_category(request, category_name_slug):
         context_dict['category'] = None
         context_dict['pages'] = None
 
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        context_dict['result_list'] = Page.objects.filter(category=category, title__contains=query)
+
     return render(request, 'rango/category.html', context=context_dict)
 
 def add_category(request):
